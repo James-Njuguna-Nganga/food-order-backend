@@ -46,6 +46,9 @@ export const CreateVandor = async (req: Request, res: Response, next: NextFuncti
     rating: 0,
     serviceAvailable: false,
     coverImage: [],
+    foods: [],
+    lat: 0,
+    lng: 0
   })
 
   return res.json(createVandor)
