@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { Vandor, FoodDoc, Offer } from "../models"
 
-// Get food Availability
 export const GetFoodAvailability = async (
   req: Request,res: Response,
   next: NextFunction
@@ -22,10 +21,10 @@ export const GetFoodAvailability = async (
   }
   console.log(result);
 
-  return res.status(400).json({ msg: "data Not found!" });
+  return res.status(400).json({ msg: "data not found!" });
 };
 
-//  top resturants
+
 export const GetTopRestaurants = async (
   req: Request,res: Response,
   next: NextFunction
@@ -46,7 +45,7 @@ export const GetTopRestaurants = async (
   return res.status(404).json({ msg: "data Not found!" });
 };
 
-// food in 30 
+
 export const GetFoodIn30Min = async (
   req: Request,res: Response,
   next: NextFunction
@@ -74,7 +73,6 @@ export const GetFoodIn30Min = async (
   return res.status(404).json({ msg: "data Not found!" });
 };
 
-// search
 export const SearchFoods = async (
   req: Request,res: Response,
   next: NextFunction
@@ -112,7 +110,6 @@ export const ResturantById = async (
   return res.status(404).json({ msg: "data Not found!" });
 };
 
-// available offer
 export const GetAvailableOffers = async (
   req: Request,res: Response,
   next: NextFunction
