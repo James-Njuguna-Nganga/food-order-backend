@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
-import { VandorLogin, GetVandorProfile, updateVandorProfile, updateVandorService, UpdateVandorCoverImage} from '../controllers';
+import { VandorLogin, GetVandorProfile, updateVandorProfile, updateVandorService, UpdateVandorCoverImage,GetCurrentOrders,ProcessOrder,GetOrderDetails} from '../controllers';
  import {Authenticate } from '../middlewares/CommonAuth';
  import { AddFood, GetFoods } from '../controllers';
  import multer from 'multer';
@@ -8,7 +8,7 @@ import path from 'path';
 
 const router = express.Router();
 
-// configure multer
+// configure 
 const imageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
 
@@ -42,9 +42,14 @@ router.patch('/coverimage',images, UpdateVandorCoverImage);
 router.post("/food", images, AddFood);
 router.get("/foods", GetFoods);
 
+// orders
+router.get('/orders', GetCurrentOrders);
+router.put('/order/:id/process', ProcessOrder);
+router.get('/order/:id', GetOrderDetails);
+
 router.get('/', (req:Request, res:Response, next:NextFunction) => {
   res.json({
-    message: "Hello from Vandor"
+    message: "hello from vandor"
   })
 })
 

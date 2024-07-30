@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, response } from "express";
 import { GenerateSignature, ValidatePassword } from "../utility";
 import { FindVandor } from "./AdminController";
 import { CreateOfferInputs, EditVandorInputs, VandorLoginInputs } from "../dto";
-import { Food } from "../models/Food";
+import { Food,Order,Offer,Vandor } from "../models";
 import { CreateFoodInputs } from "../dto/Food.dto";
 
 
@@ -197,6 +197,71 @@ export const GetFoods = async (
   }
 
   return res.json({ message: "foods information Not found" });
+};
+
+// current orders
+export const GetCurrentOrders = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  if (user) {
+    const orders = await Order.find({ VandorId: user._id }).populate(
+      "items.food"
+    );
+
+    if (orders != null) {
+      return res.status(200).json(orders);
+    }
+  }
+
+  return res.json({ message: "order not found" });
+};
+
+//  single order details by id
+export const GetOrderDetails = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.id;
+
+  if (orderId) {
+    const order = await Order.findById(orderId).populate("items.food");
+
+    if (order != null) {
+      return res.status(200).json(order);
+    }
+  }
+
+  return res.json({ message: "order not found" });
+};
+
+// Process  order
+export const ProcessOrder = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.id;
+
+  const { status, remarks, time } = req.body; // vandor/customer
+  if (orderId) {
+    const order = await Order.findById(orderId).populate("food");
+
+    order.orderStatus = status;
+    order.remarks = remarks;
+
+    if (time) {
+      order.readyTime = time;
+    }
+
+    const orderResult = await order.save();
+    if (orderResult !== null) {
+      return res.status(200).json(orderResult);
+    }
+  }
+
+  return res.json({ message: "unable to process order" });
 };
 
 
