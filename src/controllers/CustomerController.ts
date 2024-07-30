@@ -253,6 +253,130 @@ export const EditCustomerProfile = async (
   }
 };
 
+const validateTransaction = async (txnId: string) => {
+  const currentTransaction = await Transaction.findById(txnId);
+  if (currentTransaction) {
+    if (currentTransaction.status.toLocaleLowerCase() !== "failed") {
+      return { status: true, currentTransaction };
+    }
+  }
+
+  return { status: false, currentTransaction };
+};
+
+//Create orders
+export const CreateOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // Grab current login customer
+  const customer = req.user;
+
+  const { txnId, amount, items } = <OrderInputs>req.body;
+
+  if (customer) {
+    // Validate transaction
+    const { status, currentTransaction } = await validateTransaction(txnId);
+
+    if (!status) {
+      return res.status(404).json({ message: "Error with Create Order!" });
+    }
+
+    const profile = await Customer.findById(customer._id);
+    // create an order ID
+    const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
+
+    const cart = <[CartItem]>req.body;
+
+    let cartItems = Array();
+    let netAmount = 0.0;
+
+    let vandorId;
+
+    //Calculate order amount
+    const foods = await Food.find()
+      .where("_id")
+      .in(cart.map((item) => item._id))
+      .exec();
+
+    foods.map(food => {
+      items.map(({ _id, unit }) => {
+        if (food._id == _id) {
+          vandorId = food.vandorId;
+          netAmount += food.price * unit;
+          cartItems.push({ food, unit });
+        }
+      });
+    });
+
+    //create order with item descriptions
+    if (cartItems) {
+      // Create order
+      const currentOrder = await Order.create({
+        orderID: orderId,
+        vandorId: vandorId,
+        items: cartItems,
+        totalAmount: netAmount,
+        paidAmount: amount,
+        orderDate: new Date(),
+        orderStatus: "Waiting",
+        remarks: "",
+        deliveryId: "",
+        readyTime: 45,
+      });
+
+      if (currentOrder) {
+        profile.cart = [] as any;
+
+        currentTransaction.vandorId = vandorId;
+        currentTransaction.orderId = orderId;
+        currentTransaction.status = "CONFIRMED";
+
+        await currentTransaction.save();
+
+        // assignOrderForDelivery(String(currentOrder._id), vandorId);
+
+        profile.orders.push(currentOrder);
+        await profile.save();
+
+        return res.status(200).json(currentOrder);
+      }
+    }
+  }
+  return res.status(400).json({ msg: "Error while Creating Order" });
+};
+
+export const GetOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id).populate("orders");
+
+    if (profile) {
+      return res.status(200).json(profile.orders);
+    }
+  }
+};
+
+export const GetOrderById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.id;
+
+  if (orderId) {
+    const order = (await Order.findById(orderId)).populate("items.food");
+
+    res.status(200).json(order);
+  }
+};
+
 
 export const AddToCart = async (
   req: Request,
@@ -563,5 +687,5 @@ export const CreatePayment = async (
 //     }
 //   }
 
-//   return res.status(400).json({ message: "Offer is not valid" });
-// };
+// //   return res.status(400).json({ message: "Offer is not valid" });
+//    {} ;

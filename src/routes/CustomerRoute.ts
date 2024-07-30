@@ -11,9 +11,9 @@ import {
   GetCustomerProfile,
   CustomerVerify,
   RequestOtp,
-  // CreateOrder,
-  // GetOrders,
-  // GetOrderById,
+  CreateOrder,
+  GetOrders,
+  GetOrderById,
   AddToCart,
   DeleteCart,
   GetCart,
@@ -39,8 +39,8 @@ router.delete("/cart", DeleteCart);
 // router.post('/create-payment', CreatePayment)
 
 
-// router.post("/create-order", CreateOrder);
-// router.get("/orders", GetOrders);
-// router.get("/order/:id", GetOrderById);
+router.post("/create-order", CreateOrder);
+router.get("/orders", GetOrders);
+router.get("/order/:id", GetOrderById);
 
 export { router as CustomerRoute };
