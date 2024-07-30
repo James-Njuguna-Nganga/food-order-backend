@@ -2,10 +2,10 @@ import mongoose, {Schema, Document} from 'mongoose';
 
 export interface OfferDoc extends Document {
     offerType: string;
-    vandors: [any];
+    vandors: [any]; //id
     title: string;
-    description: string;
-    minValue: number;
+    description: string; //any
+    minValue: number; // min amount
     offerAmount: number;
     startValidity: Date;
     endValidity: Date;
@@ -30,8 +30,12 @@ const OfferSchema = new Schema ({
     endValidity: Date,
     promocode: {type: String, require: true},
     promoType: {type: String, require: true},
-    bank: [{ type: String}],
-    bins: [{ type: Number}],
+    bank: [
+        { type: String}
+    ],
+    bins: [
+        { type: Number}
+    ],
     pincode: {type: String, require: true},
     isActive: Boolean
 

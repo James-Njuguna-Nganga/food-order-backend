@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, response } from "express";
 import { GenerateSignature, ValidatePassword } from "../utility";
 import { FindVandor } from "./AdminController";
 import { CreateOfferInputs, EditVandorInputs, VandorLoginInputs } from "../dto";
-import { Food,Order,Offer,Vandor } from "../models";
+import { Food,Order,Offer } from "../models";
 import { CreateFoodInputs } from "../dto/Food.dto";
 
 
@@ -262,6 +262,146 @@ export const ProcessOrder = async (
   }
 
   return res.json({ message: "unable to process order" });
+};
+
+export const GetOffers = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  if (user) {
+    let currentOffers = Array();
+
+    const offers = await Offer.find().populate("vandors");
+
+    if (offers) {
+      offers.map((item) => {
+        if (item.vandors) {
+          item.vandors.map((vandor) => {
+            if (vandor._id.toString() === user._id) {
+              currentOffers.push(item);
+            }
+          });
+        }
+
+        if (item.offerType === "Generic") {
+          currentOffers.push(item);
+        }
+      });
+    }
+
+    return res.json(currentOffers);
+  }
+
+  return res.json({ message: "offers unavailable" });
+};
+
+export const AddOffer = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  if (user) {
+    const {
+      title,description,
+      offerType,
+      offerAmount,
+      pincode,
+      promocode,
+      promoType,
+      startValidity,
+      endValidity,
+      bank,
+      bins,
+      minValue,
+      isActive,
+      
+    } = <CreateOfferInputs>req.body;
+
+    const vandor = await FindVandor(user._id);
+
+    if (vandor) {
+      const offer = await Offer.create({
+        title,
+        description,
+        offerType,
+        offerAmount,
+        pincode,
+        promocode,
+        promoType,
+        startValidity,
+        endValidity,
+        bank,
+        bins,
+        minValue,
+        isActive,
+        vandors: [vandor],
+      });
+
+      console.log(offer);
+
+      res.status(200).json(offer);
+    }
+  }
+
+  return res.json({ "message": "unable to add offer" });
+};
+
+export const EditOffer = async (
+  req: Request,res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  const offerId = req.params.id;
+
+  if (user) {
+    const {
+      title,
+      description,
+      offerType,
+      offerAmount,
+      pincode,
+      promocode,
+      promoType,
+      startValidity,
+      endValidity,
+      bank,
+      bins,
+      minValue,
+      isActive,
+    } = <CreateOfferInputs>req.body;
+
+    const currentOffer = await Offer.findById(offerId);
+
+    if (currentOffer) {
+      const vandor = await FindVandor(user._id);
+
+      if (vandor) {
+       currentOffer.title = title,
+       currentOffer.description = description,
+       currentOffer.offerType = offerType,
+       currentOffer.offerAmount = offerAmount,
+       currentOffer.pincode = pincode,
+       currentOffer.promocode = promocode,
+       currentOffer.promoType = promoType,
+       currentOffer.startValidity = startValidity,
+       currentOffer.endValidity = endValidity,
+       currentOffer.bank = bank,
+       currentOffer.bins = bins,
+       currentOffer.isActive = isActive,
+       currentOffer.minValue = minValue
+
+       const result = await currentOffer.save();
+
+        res.status(200).json(result);
+      }
+    }
+  }
+
+  return res.json({ "message": "unable to add offer" });
 };
 
 

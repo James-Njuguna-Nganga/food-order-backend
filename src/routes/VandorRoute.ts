@@ -1,7 +1,6 @@
 import express, {Request, Response, NextFunction} from 'express';
-import { VandorLogin, GetVandorProfile, updateVandorProfile, updateVandorService, UpdateVandorCoverImage,GetCurrentOrders,ProcessOrder,GetOrderDetails} from '../controllers';
+import { VandorLogin, GetVandorProfile, updateVandorProfile, updateVandorService, UpdateVandorCoverImage,GetCurrentOrders,ProcessOrder,GetOrderDetails,AddFood,GetFoods,GetOffers, AddOffer,EditOffer} from '../controllers';
  import {Authenticate } from '../middlewares/CommonAuth';
- import { AddFood, GetFoods } from '../controllers';
  import multer from 'multer';
  import fs from 'fs';
 import path from 'path';
@@ -41,6 +40,11 @@ router.patch('/coverimage',images, UpdateVandorCoverImage);
 
 router.post("/food", images, AddFood);
 router.get("/foods", GetFoods);
+
+//offers
+router.get('/offers', GetOffers);
+router.post('/offer', AddOffer);
+router.put('/offer/:id', EditOffer);
 
 // orders
 router.get('/orders', GetCurrentOrders);
