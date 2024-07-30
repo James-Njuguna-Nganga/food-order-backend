@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
-import { CreateVandor, GetVandors, GetVandorByID } from '../controllers/';
+import { CreateVandor, GetVandors, GetVandorByID } from '../controllers';
 
 const router = express.Router();
 

@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 
 const router = express.Router();
 
-import { Authenticate } from "../middlewares";
+import { Authenticate } from "../middlewares/CommonAuth";
 
 import {
   CustomerLogin,
@@ -18,7 +18,7 @@ import {
   DeleteCart,
   GetCart,
   // VerifyOffer,
-   CreatePayment
+  //  CreatePayment
 } from "../controllers";
 
 router.post("/signup", CustomerSignUp);
