@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
+import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { APP_SECRET } from '../config';
-import { VandorPayLoad } from '../dto/Vandor.dto';
 import { AuthPayload } from '../dto/Auth.dto';
-import { Request } from 'express';
+
 
 export const GenerateSalt = async () => {
   return await bcrypt.genSalt();

@@ -1,4 +1,4 @@
-import mongoose, {Schema, Document} from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface FoodDoc extends Document {
     vandorId: string;
@@ -12,23 +12,23 @@ export interface FoodDoc extends Document {
     images: [string]
 }
 
-const FoodSchema = new Schema ({
-    vandorId: { type: String},
-    name : { type: String, required: true},
-    description : { type: String, required: true},
-    category: { type: String},
-    foodType: { type: String, required: true},
-    readyTime: { type: Number, required: true }, 
-    price: { type: Number, required: true},
-    rating: { type: Number},
-    images: { type: [String]}
+const FoodSchema = new Schema({
+    vandorId: { type: String },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    category: { type: String },
+    foodType: { type: String, required: true },
+    readyTime: { type: Number, required: true },
+    price: { type: Number, required: true },
+    rating: { type: Number },
+    images: { type: [String] }
 
-},{
-    toJSON:{
-        transform(doc, ret){
+}, {
+    toJSON: {
+        transform(doc, ret) {
             delete ret.__v,
-            delete ret.createdAt,
-            delete ret.updatedAt
+                delete ret.createdAt,
+                delete ret.updatedAt
         }
     },
     timestamps: true

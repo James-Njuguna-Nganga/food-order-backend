@@ -1,9 +1,23 @@
-import express, {Request, Response, NextFunction} from 'express';
-import { VandorLogin, GetVandorProfile, updateVandorProfile, updateVandorService, UpdateVandorCoverImage,GetCurrentOrders,ProcessOrder,GetOrderDetails,AddFood,GetFoods,GetOffers, AddOffer,EditOffer} from '../controllers';
- import {Authenticate } from '../middlewares/CommonAuth';
- import multer from 'multer';
- import fs from 'fs';
+import express, { Request, Response, NextFunction } from 'express';
+import multer from 'multer';
+import fs from 'fs';
 import path from 'path';
+import { Authenticate } from '../middlewares/CommonAuth';
+
+import { VandorLogin, 
+  GetVandorProfile, 
+  updateVandorProfile, 
+  updateVandorService, 
+  UpdateVandorCoverImage, 
+  GetCurrentOrders, 
+  ProcessOrder, 
+  GetOrderDetails, 
+  AddFood, 
+  GetFoods, 
+  GetOffers, 
+  AddOffer, 
+  EditOffer } from '../controllers';
+
 
 const router = express.Router();
 
@@ -17,7 +31,7 @@ const imageStorage = multer.diskStorage({
       fs.mkdirSync(imagesDir, { recursive: true });
     }
     cb(null, imagesDir);
-    
+
   },
 
   filename: function (req, file, cb) {
@@ -27,7 +41,7 @@ const imageStorage = multer.diskStorage({
 
 });
 
-const images = multer({storage: imageStorage}).array('images', 8)
+const images = multer({ storage: imageStorage }).array('images', 8)
 
 router.post('/login', VandorLogin);
 router.use(Authenticate);
@@ -35,7 +49,7 @@ router.use(Authenticate);
 router.get('/profile', GetVandorProfile);
 router.patch('/profile', updateVandorProfile);
 router.patch('/service', updateVandorService);
-router.patch('/coverimage',images, UpdateVandorCoverImage);
+router.patch('/coverimage', images, UpdateVandorCoverImage);
 
 
 router.post("/food", images, AddFood);
@@ -51,10 +65,10 @@ router.get('/orders', GetCurrentOrders);
 router.put('/order/:id/process', ProcessOrder);
 router.get('/order/:id', GetOrderDetails);
 
-router.get('/', (req:Request, res:Response, next:NextFunction) => {
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.json({
     message: "hello from vandor"
   })
 })
 
-export { router as VandorRoute};
+export { router as VandorRoute };

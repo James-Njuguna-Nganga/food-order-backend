@@ -17,8 +17,8 @@ import {
   AddToCart,
   DeleteCart,
   GetCart,
-  // VerifyOffer,
-  //  CreatePayment
+  VerifyOffer,
+  CreatePayment
 } from "../controllers";
 
 router.post("/signup", CustomerSignUp);
@@ -34,9 +34,9 @@ router.post("/cart", AddToCart);
 router.get("/cart", GetCart);
 router.delete("/cart", DeleteCart);
 
-// router.get('/offer/verify/:id', VerifyOffer)
+router.get('/offer/verify/:id', VerifyOffer)
 
-// router.post('/create-payment', CreatePayment)
+router.post('/create-payment', CreatePayment)
 
 
 router.post("/create-order", CreateOrder);

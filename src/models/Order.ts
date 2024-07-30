@@ -5,16 +5,13 @@ export interface OrderDoc extends Document {
   vandorId: string;
   items: [any];
   totalAmount: number;
-  paidThrough: string;
-  paymentResponse: string;
+  paidAmount: number;
   orderDate: Date; //date
  orderStatus: string;// ACCEPT // REJECT // UNDER-PROCESS // READY //waiting //failed
 
   remarks: string;
   deliveryId: string;
   readyTime: number;
-  appliedOffers: boolean;
-  offerId: string; //max 60 mins
 }
 
 const OrderSchema = new Schema(
@@ -34,8 +31,7 @@ const OrderSchema = new Schema(
     remarks: { type: String },
     deliveryId: { type: String },
     readyTime: { type: Number },
-    appliedOffers: { type: Boolean },
-    offerId: { type: String }
+  
   },
   {
     toJSON: {

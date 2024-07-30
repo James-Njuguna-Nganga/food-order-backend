@@ -2,13 +2,13 @@ import { Request, Response, NextFunction, response } from "express";
 import { GenerateSignature, ValidatePassword } from "../utility";
 import { FindVandor } from "./AdminController";
 import { CreateOfferInputs, EditVandorInputs, VandorLoginInputs } from "../dto";
-import { Food,Order,Offer } from "../models";
+import { Food, Order, Offer } from "../models";
 import { CreateFoodInputs } from "../dto/Food.dto";
 
 
 
 export const VandorLogin = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const { email, password } = <VandorLoginInputs>req.body;
@@ -40,7 +40,7 @@ export const VandorLogin = async (
 
 // Get Vandor profile
 export const GetVandorProfile = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
@@ -55,7 +55,7 @@ export const GetVandorProfile = async (
 };
 
 export const updateVandorProfile = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const { foodTypes, name, address, phone } = <EditVandorInputs>req.body;
@@ -82,12 +82,12 @@ export const updateVandorProfile = async (
 };
 //update vandor service
 export const updateVandorService = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
 
-  const {lat, lng} = req.body;
+  const { lat, lng } = req.body;
 
   if (user) {
     const existingVandor = await FindVandor(user._id);
@@ -96,7 +96,7 @@ export const updateVandorService = async (
 
       existingVandor.serviceAvailable = !existingVandor.serviceAvailable;
 
-      if(lat && lng){
+      if (lat && lng) {
         existingVandor.lat = lat;
         existingVandor.lng = lng;
       }
@@ -149,7 +149,7 @@ export const AddFood = async (
   if (user) {
     const { name, description, category, foodType, readyTime, price } = <
       CreateFoodInputs
-    >req.body;
+      >req.body;
 
     const vandor = await FindVandor(user._id);
 
@@ -201,7 +201,7 @@ export const GetFoods = async (
 
 // current orders
 export const GetCurrentOrders = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
@@ -221,7 +221,7 @@ export const GetCurrentOrders = async (
 
 //  single order details by id
 export const GetOrderDetails = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const orderId = req.params.id;
@@ -239,7 +239,7 @@ export const GetOrderDetails = async (
 
 // Process  order
 export const ProcessOrder = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const orderId = req.params.id;
@@ -265,7 +265,7 @@ export const ProcessOrder = async (
 };
 
 export const GetOffers = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
@@ -298,14 +298,14 @@ export const GetOffers = async (
 };
 
 export const AddOffer = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
 
   if (user) {
     const {
-      title,description,
+      title, description,
       offerType,
       offerAmount,
       pincode,
@@ -317,7 +317,7 @@ export const AddOffer = async (
       bins,
       minValue,
       isActive,
-      
+
     } = <CreateOfferInputs>req.body;
 
     const vandor = await FindVandor(user._id);
@@ -350,7 +350,7 @@ export const AddOffer = async (
 };
 
 export const EditOffer = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const user = req.user;
@@ -380,21 +380,21 @@ export const EditOffer = async (
       const vandor = await FindVandor(user._id);
 
       if (vandor) {
-       currentOffer.title = title,
-       currentOffer.description = description,
-       currentOffer.offerType = offerType,
-       currentOffer.offerAmount = offerAmount,
-       currentOffer.pincode = pincode,
-       currentOffer.promocode = promocode,
-       currentOffer.promoType = promoType,
-       currentOffer.startValidity = startValidity,
-       currentOffer.endValidity = endValidity,
-       currentOffer.bank = bank,
-       currentOffer.bins = bins,
-       currentOffer.isActive = isActive,
-       currentOffer.minValue = minValue
+        currentOffer.title = title,
+          currentOffer.description = description,
+          currentOffer.offerType = offerType,
+          currentOffer.offerAmount = offerAmount,
+          currentOffer.pincode = pincode,
+          currentOffer.promocode = promocode,
+          currentOffer.promoType = promoType,
+          currentOffer.startValidity = startValidity,
+          currentOffer.endValidity = endValidity,
+          currentOffer.bank = bank,
+          currentOffer.bins = bins,
+          currentOffer.isActive = isActive,
+          currentOffer.minValue = minValue
 
-       const result = await currentOffer.save();
+        const result = await currentOffer.save();
 
         res.status(200).json(result);
       }

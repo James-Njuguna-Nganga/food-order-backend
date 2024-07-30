@@ -1,8 +1,8 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction,  } from "express";
 import { Vandor, FoodDoc, Offer } from "../models"
 
 export const GetFoodAvailability = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const pincode = req.params.pincode;
@@ -26,7 +26,7 @@ export const GetFoodAvailability = async (
 
 
 export const GetTopRestaurants = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const pincode = req.params.pincode;
@@ -47,7 +47,7 @@ export const GetTopRestaurants = async (
 
 
 export const GetFoodIn30Min = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const pincode = req.params.pincode;
@@ -74,7 +74,7 @@ export const GetFoodIn30Min = async (
 };
 
 export const SearchFoods = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const pincode = req.params.pincode;
@@ -96,11 +96,11 @@ export const SearchFoods = async (
 };
 
 export const ResturantById = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const id = req.params.id;
-  
+
   const result = await Vandor.findById(id).populate("foods");
 
   if (result) {
@@ -111,7 +111,7 @@ export const ResturantById = async (
 };
 
 export const GetAvailableOffers = async (
-  req: Request,res: Response,
+  req: Request, res: Response,
   next: NextFunction
 ) => {
   const pincode = req.params.pincode;
@@ -122,5 +122,5 @@ export const GetAvailableOffers = async (
     return res.status(200).json(offers);
   }
 
-  return res.json({ message: "Offers not Found!" });
+  return res.json({ message: "Offers not found" });
 };

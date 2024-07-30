@@ -5,7 +5,7 @@ export interface TransactionDoc extends Document {
     customer: string;
     vandorId: string;
     orderId: string;
-    orderValue: string;
+    orderValue: number;
     offerUsed: string;
     status: string;
     paymentMode: string;
@@ -17,7 +17,7 @@ const TransactionSchema = new Schema ({
     customer: String,
     vandorId: String,
     orderId: String,
-    orderValue: String,
+    orderValue: Number,
     offerUsed: String,
     status: String,
     paymentMode: String,
@@ -31,6 +31,6 @@ const TransactionSchema = new Schema ({
     timestamps: true
 });
 
-const Transaction = mongoose.model<TransactionDoc>('t ransaction', TransactionSchema);
+const Transaction = mongoose.model<TransactionDoc>('transaction', TransactionSchema);
 
 export { Transaction };
