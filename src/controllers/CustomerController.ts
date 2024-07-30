@@ -358,21 +358,20 @@ export const DeleteCart = async (
 
 //Create orders
 export const CreateOrder = async (
-  req: Request,
-  res: Response,
+  req: Request,res: Response,
   next: NextFunction
 ) => {
-  // Grab current login customer
+  //  current login customer
   const customer = req.user;
 
   const { txnId, amount, items } = <OrderInputs>req.body;
 
   if (customer) {
-    // Validate transaction
+    // Validate 
     const { status, currentTransaction } = await validateTransaction(txnId);
 
     if (!status) {
-      return res.status(404).json({ message: "Error with Create Order!" });
+      return res.status(404).json({ message: "error with create order!" });
     }
 
     const profile = await Customer.findById(customer._id);
@@ -410,12 +409,15 @@ export const CreateOrder = async (
         vandorId: vandorId,
         items: cartItems,
         totalAmount: netAmount,
-        paidAmount: amount,
+        paidThrough: "mpesa",
         orderDate: new Date(),
-        orderStatus: "Waiting",
+        paymentResponse:"some json response stringify",
+        orderStatus: "waiting",
         remarks: "",
         deliveryId: "",
-        readyTime: 45,
+        offerId: null,
+        readyTime: 60,
+        appliedOffer: false
       });
 
       if (currentOrder) {
@@ -423,7 +425,7 @@ export const CreateOrder = async (
 
         currentTransaction.vandorId = vandorId;
         currentTransaction.orderId = orderId;
-        currentTransaction.status = "CONFIRMED";
+        currentTransaction.status = "Confirmed";
 
         await currentTransaction.save();
 
@@ -436,12 +438,11 @@ export const CreateOrder = async (
       }
     }
   }
-  return res.status(400).json({ msg: "Error while Creating Order" });
+  return res.status(400).json({ msg: "error while creating order" });
 };
 
 export const GetOrders = async (
-  req: Request,
-  res: Response,
+  req: Request,res: Response,
   next: NextFunction
 ) => {
   const customer = req.user;
@@ -456,8 +457,7 @@ export const GetOrders = async (
 };
 
 export const GetOrderById = async (
-  req: Request,
-  res: Response,
+  req: Request,res: Response,
   next: NextFunction
 ) => {
   const orderId = req.params.id;
